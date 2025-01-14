@@ -1,7 +1,7 @@
 import React from "react";
 import { AgGridReact } from "ag-grid-react";
-// import "ag-grid-community/dist/styles/ag-grid.css"; //ag-grid v26.1.0
-// import "ag-grid-community/dist/styles/ag-theme-balham.css"; //ag-grid v26.1.0
+// import "ag-grid-community/dist/styles/ag-grid.css";
+// import "ag-grid-community/dist/styles/ag-theme-balham.css";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 import { GridReadyEvent, GridApi, ColumnApi, ColDef } from "ag-grid-community";
@@ -11,84 +11,90 @@ const columnDefs: ColDef[] = [
   {
     headerName: "ID",
     field: "id",
-    width: 70
+    // width: 70,
+    pinned: "left",
   },
   {
     headerName: "Athlete",
     field: "athlete",
-    width: 150,
-    editable: true
+    // width: 150,
+    editable: true,
+    pinned: "left",
   },
   {
     headerName: "Age",
     field: "age",
-    width: 90,
-    minWidth: 50,
-    maxWidth: 100,
-    editable: true
+    // width: 90,
+    // minWidth: 50,
+    // maxWidth: 100,
+    editable: true,
   },
   {
-    headerName: "Country",
+    headerName: "Athlete Country",
     field: "country",
-    width: 120
+    // width: 120,
+    initialHide: true,
   },
   {
     headerName: "Year",
     field: "year",
-    width: 90
+    // width: 90,
   },
   {
     headerName: "Date",
     field: "date",
-    width: 110
+    // width: 110,
   },
   {
     headerName: "Sport",
     field: "sport",
-    width: 110
+    // width: 110,
   },
   {
     headerName: "Gold",
     field: "gold",
-    width: 100
+    // width: 100,
   },
   {
     headerName: "Silver",
     field: "silver",
-    width: 100
+    // width: 100,
   },
   {
     headerName: "Bronze",
     field: "bronze",
-    width: 100
+    // width: 100,
   },
   {
     headerName: "Total",
     field: "total",
-    width: 100
-  }
+    // width: 100,
+    maxWidth: 70,
+    pinned: "right",
+  },
 ];
-
-type AgGridApi = {
-  grid?: GridApi;
-  column?: ColumnApi;
-};
 
 function Grid() {
   const [rowData, setRowData] = React.useState<Athlete[]>([]);
-  const apiRef = React.useRef<AgGridApi>({
-    grid: undefined,
-    column: undefined
-  });
+  const apiRef = React.useRef<any>(null);
   const onGridReady = (params: GridReadyEvent) => {
-    apiRef.current.grid = params.api;
-    apiRef.current.column = params.columnApi;
+    apiRef?.current?.columnApi.autoSizeAllColumns();
   };
 
   React.useEffect(() => {
     fetchData().then((d) => setRowData(d));
     // fetchLargeData().then((d) => setRowData(d));
   }, []);
+
+  const gridOptions = {
+    defaultColDef: {
+      menuTabs: ["columnsMenuTab"],
+      // flex: 1,
+      // wrapHeaderText: true,
+      // autoHeaderHeight: true,
+    },
+    suppressMovableColumns: true,
+  };
 
   return (
     <div style={{ height: "80vh" }}>
@@ -99,9 +105,12 @@ function Grid() {
         <AgGridReact
           rowSelection="multiple"
           suppressRowClickSelection
+          suppressDragLeaveHidesColumns
           columnDefs={columnDefs}
           onGridReady={onGridReady}
           rowData={rowData}
+          {...gridOptions}
+          ref={apiRef}
         />
       </div>
     </div>
