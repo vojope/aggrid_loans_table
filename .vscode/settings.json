@@ -1,0 +1,36 @@
+{
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "eslint.workingDirectories": ["."],
+  "scss.lint.unknownAtRules": "ignore",
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "workbench.colorCustomizations": {
+    "statusBar.background": "#01335b",
+    "statusBar.foreground": "#ffffff",
+    "titleBar.activeBackground": "#01335b",
+    "titleBar.activeForeground": "#ffffff",
+    "activityBar.background": "#01335b"
+  }
+}
