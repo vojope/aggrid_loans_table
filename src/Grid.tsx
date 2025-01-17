@@ -7,135 +7,11 @@ import "ag-grid-community/styles/ag-theme-balham.css";
 import { GridReadyEvent, GridApi, ColumnApi, ColDef, ColumnMenuTab, ColumnVisibleEvent, DisplayedColumnsChangedEvent } from "ag-grid-community";
 import { fetchData, fetchLargeData, Athlete } from "./api";
 
-const columnDefs: ColDef[] = [
-  {
-    headerName: "ID",
-    field: "id",
-    // width: 70,
-    minWidth: 70,
-    maxWidth: 70,
-    pinned: "left",
-    suppressMenu: true,
-    suppressColumnsToolPanel: true,
-  },
-  {
-    headerName: "Athlete",
-    field: "athlete",
-    // width: 150,
-    minWidth: 150,
-    maxWidth: 150,
-    editable: true,
-    pinned: "left",
-    suppressMenu: true,
-    suppressColumnsToolPanel: true,
-  },
-  {
-    headerName: "Age",
-    field: "age",
-    // width: 90,
-    // minWidth: 50,
-    // maxWidth: 100,
-    minWidth: 200,
-    editable: true,
-  },
-  {
-    headerName: "Athlete Country",
-    field: "country",
-    // width: 120,
-    minWidth: 220,
-    initialHide: true,
-  },
-  {
-    headerName: "Year",
-    field: "year",
-    // width: 90,
-    minWidth: 190,
-  },
-  {
-    headerName: "Date",
-    field: "date",
-    // width: 110,
-    minWidth: 210,
-  },
-  {
-    headerName: "Sport",
-    field: "sport",
-    // width: 110,
-    minWidth: 210,
-  },
-  {
-    headerName: "Gold",
-    field: "gold",
-    // width: 100,
-    minWidth: 200,
-  },
-  {
-    headerName: "Silver",
-    field: "silver",
-    // width: 100,
-    minWidth: 200,
-  },
-  {
-    headerName: "Bronze",
-    field: "bronze",
-    // width: 100,
-    minWidth: 200,
-  },
-  {
-    headerName: "Age1",
-    field: "age",
-    // width: 90,
-    // minWidth: 50,
-    // maxWidth: 100,
-    editable: true,
-  },
-  {
-    headerName: "Athlete Country1",
-    field: "country",
-    // width: 120,
-    initialHide: true,
-  },
-  {
-    headerName: "Year1",
-    field: "year",
-    // width: 90,
-  },
-  {
-    headerName: "Date1",
-    field: "date",
-    // width: 110,
-  },
-  {
-    headerName: "Sport1",
-    field: "sport",
-    // width: 110,
-  },
-  {
-    headerName: "Gold1",
-    field: "gold",
-    // width: 100,
-  },
-  {
-    headerName: "Silver1",
-    field: "silver",
-    // width: 100,
-  },
-  {
-    headerName: "Bronze1",
-    field: "bronze",
-    // width: 100,
-  },
-  {
-    headerName: "Total",
-    field: "total",
-    // width: 100,
-    minWidth: 70,
-    maxWidth: 70,
-    pinned: "right",
-    suppressMenu: true,
-    suppressColumnsToolPanel: true,
-  },
-];
+const pinnedColumnsProperties = (pinned: 'left' | 'right') => ({
+  pinned: pinned,
+  suppressMenu: true,
+  suppressColumnsToolPanel: true,
+});
 
 function Grid() {
   const [rowData, setRowData] = React.useState<Athlete[]>([]);
@@ -144,6 +20,103 @@ function Grid() {
     fetchData().then((d) => setRowData(d));
     // fetchLargeData().then((d) => setRowData(d));
   }, []);
+
+  const apiRef = React.useRef<any>(null);
+
+  // Move this to an upper component that wraps grid and another component to simulate changing tabs
+  const [value, setValue] = React.useState<string[]>(['age', 'country', 'year', 'date', 'sport', 'gold', 'silver', 'bronze']); 
+
+  const columnDefs: ColDef[] = [
+    {
+      headerName: "ID",
+      field: "id",
+      // width: 70,
+      minWidth: 70,
+      maxWidth: 70,
+      ...pinnedColumnsProperties('left'),
+    },
+    {
+      headerName: "Athlete",
+      field: "athlete",
+      // width: 150,
+      minWidth: 150,
+      maxWidth: 150,
+      editable: true,
+      ...pinnedColumnsProperties('left'),
+
+    },
+    {
+      headerName: "Age",
+      field: "age",
+      // width: 90,
+      // minWidth: 50,
+      // maxWidth: 100,
+      minWidth: 100,
+      editable: true,
+      hide: !value.includes('age'),
+    },
+    {
+      headerName: "Athlete Country",
+      field: "country",
+      // width: 120,
+      minWidth: 120,
+      initialHide: true,
+      hide: !value.includes('country'),
+    },
+    {
+      headerName: "Year",
+      field: "year",
+      // width: 90,
+      minWidth: 90,
+      hide: !value.includes('year'),
+    },
+    {
+      headerName: "Date",
+      field: "date",
+      // width: 110,
+      minWidth: 110,
+      hide: !value.includes('date'),
+    },
+    {
+      headerName: "Sport",
+      field: "sport",
+      // width: 110,
+      minWidth: 250,
+      hide: !value.includes('sport'),
+      flex: 1.9,
+      suppressColumnsToolPanel: true,
+    },
+    {
+      headerName: "Gold",
+      field: "gold",
+      // width: 100,
+      minWidth: 100,
+      hide: !value.includes('gold'),
+    },
+    {
+      headerName: "Silver",
+      field: "silver",
+      // width: 100,
+      minWidth: 100,
+      hide: !value.includes('silver'),
+    },
+    {
+      headerName: "Bronze",
+      field: "bronze",
+      // width: 100,
+      minWidth: 100,
+      hide: !value.includes('bronze'),
+    },
+    {
+      headerName: "Total",
+      field: "total",
+      // width: 100,
+      minWidth: 70,
+      maxWidth: 70,
+      ...pinnedColumnsProperties('right'),
+      flex: 0.5,
+    },
+  ];
 
   const postProcessPopup = React.useCallback((params) => {
     // check callback is for menu
@@ -165,7 +138,7 @@ function Grid() {
   const gridOptions = {
     defaultColDef: {
       menuTabs: ["columnsMenuTab"] as ColumnMenuTab[],
-      // flex: 1,
+      flex: 1,
       wrapHeaderText: true,
       autoHeaderHeight: true,
       columnsMenuParams: {
@@ -174,6 +147,7 @@ function Grid() {
         suppressColumnExpandAll: true,
         suppressSyncLayoutWithGrid: true
       },
+      suppressMenu: true,
     },
     suppressMovableColumns: true,
     suppressContextMenu: true,
@@ -182,10 +156,12 @@ function Grid() {
     postProcessPopup: postProcessPopup,
   };
 
-  const onGridReady = (params: GridReadyEvent) => {
+  const onGridReady = (ev: GridReadyEvent) => {
     // apiRef?.current?.columnApi.autoSizeAllColumns();
     // alert(apiRef?.current?.columnApi.getDisplayedCenterColumns())
-    params.columnApi.autoSizeAllColumns();
+    // ev.columnApi.autoSizeAllColumns();
+    apiRef.current=ev.api;
+    ev.api.sizeColumnsToFit();
   };
 
   const onColumnVisible = (ev: ColumnVisibleEvent) => {
@@ -194,6 +170,8 @@ function Grid() {
     columns.length;
     // columnApi.autoSizeAllColumns();
     api.sizeColumnsToFit();
+    // column && (column.isVisible() ? setValue([...value, column.getColId()]) : setValue(value.filter((v) => v!==column.getColId())));
+    setValue(columns.map((column) => column.getColId()));
     // alert(column?.getColId() + ' :: ' + column?.isVisible());
   };
 
@@ -203,18 +181,20 @@ function Grid() {
   
 
   return (
-    <div style={{ height: "80vh" }}>
+    <div style={{ height: "60vh", width: "60vh" }}>
+      <button style={{width: '100px'}} id='columnButton' onClick={(ev) => apiRef.current.showColumnMenuAfterMouseClick('id', ev)}>Show</button>
       <div
         style={{ height: "100%", width: "100%" }}
         className="ag-theme-balham"
       >
         <AgGridReact
           columnDefs={columnDefs}
-          // onGridReady={onGridReady}
+          onGridReady={onGridReady}
           rowData={rowData}
           {...gridOptions}
           onColumnVisible = {onColumnVisible}
           onDisplayedColumnsChanged =  {onDisplayedColumnsChanged}
+          ref={apiRef}
         />
       </div>
     </div>
